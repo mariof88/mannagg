@@ -1,16 +1,21 @@
 FROM node:20-alpine
 
+# Installa git (necessario su Alpine)
+RUN apk add --no-cache git
+
 WORKDIR /app
 
-COPY package*.json ./
+# Clona il repository direttamente nella cartella /app
+RUN git clone https://github.com/qwertyuiop8899/SelfVix .
+
+# Installa le dipendenze
 RUN npm install
 
-COPY . .
-
-# HuggingFace Spaces expect apps to run on port 7860
+# HF usa la porta 7860
 ENV PORT=7860
 EXPOSE 7860
 
+# Compila l'addon
 RUN npm run build
 
 CMD ["npm", "start"]
